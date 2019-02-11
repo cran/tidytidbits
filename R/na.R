@@ -251,4 +251,46 @@ which_non_na <- function(...)
 }
 
 
+#' Row-wise first value that is not NA
+#'
+#' @param .tbl A data frame
+#' @param ... A column selection, as for \code{dplyr::\link{select}}
+#'
+#' @return A vector of length nrow(.tbl) containing the first found non-na value
+#' @export
+first_non_nas_at <- function(.tbl, ...)
+{
+  vars <- quos(...)
+  .tbl %>%
+    select(!!!vars) ->
+    subset
+
+  do.call(first_non_nas, subset)
+}
+
+#' Row-wise first index of column that is not NA
+#'
+#' @param .tbl A data frame
+#' @param ... A column selection, as for \code{dplyr::\link{select}}
+#'
+#' @return A numeric vector of length nrow(.tbl) containing the index of the first found non-na value in the given columns.
+#'    Possible values are NA (all values in that row are NA), and 1 ... number of columns in selection
+#' @export
+first_which_non_na_at <- function(.tbl, ...)
+{
+  vars <- quos(...)
+  .tbl %>%
+    select(!!!vars) ->
+    subset
+
+  do.call(which_non_na, subset) %>%
+    map_int(function(indices)
+    {
+      if (is_empty(indices))
+        na_int
+      else
+        indices[[1]]
+    })
+}
+
 

@@ -74,6 +74,7 @@ execute_if <- function(.data, .predicate, .language)
 #' execute_if_else: Like execute_if, but with an additional field of language which is executed if predicate is false
 #' @param .language_true Execute if predicate it TRUE
 #' @param .language_false Execute if predicate it FALSE
+#' @export
 #'
 #' @rdname execute_if
 execute_if_else <- function(.data, .predicate, .language_true, .language_false)
@@ -565,6 +566,12 @@ count_by <- function(.tbl,
     .tbl <- .tbl[complete, ]
   }
 
+  # we use tally, which uses "n" as hard-coded column name
+  if ("n" %in% colnames(.tbl))
+  {
+    .tbl %<>% select(-n)
+  }
+
   .tbl %<>%
     group_by(!!!grouping, add = add_grouping) %>%
     tally() %>%
@@ -581,6 +588,67 @@ count_by <- function(.tbl,
   }
   .tbl
 }
+
+#' Count by multiple variables
+#'
+#' @param .tbl A data frame
+#' @param .vars A list of variables (created using vars()) for which \code{\link{count_by}} is to be called
+#' @param .grouping Additional grouping to apply prior to counting
+#' @param label_style Character vector containing one of "wide" and "long" or both.\itemize{
+#'     \item "wide": Include labels in wide format, i.e., for each variable one column named as variable
+#'     and giving the label for the corresponding count, but NA for all rows from different variables
+#'     \item "long": Include two meta columns, one giving the variable that is counted (value from .vars),
+#'     the second giving the label (which value/category of the variable is counted?).
+#'     }
+#' @param na_label If na.rm=F, label to use for counting NA values
+#' @param long_label_column_names Character vector of size 2: If label_style contains "long",
+#'    the names for the additional meta columns for variable and category
+#' @inheritParams count_by
+#'
+#' @return A data frame concatenated from individual count_by results, with labels as per label_style.
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' library(datasets)
+#' library(dplyr)
+#' mtcars %>% count_at(vars(gear, cyl))
+count_at <- function(.tbl,
+                     .vars,
+                     .grouping = vars(),
+                     label_style = "long",
+                     long_label_column_names = c("variable", "category"),
+                     column_names = c("n", "rel", "percent"),
+                     na_label = "missing",
+                     percentage_label_decimal_places = 1,
+                     add_grouping = T,
+                     na.rm = F)
+{
+  label_style <- match.arg(label_style, c("wide", "long"), several.ok = T)
+  labels <- list()
+  if ("long" %in% label_style)
+    labels <- append(labels, long_label_column_names)
+  if ("wide" %in% label_style)
+    labels <- append(labels, .vars)
+
+  map_dfr(.vars, function(.var)
+  {
+    var_name <- quo_name(.var)
+    na_replacement_list <- set_names(list(na_label), var_name)
+    .tbl %>%
+      mutate(!!var_name := if(is.factor(!!.var)) as.character(!!.var) else !!.var) %>%
+      count_by(!!!.grouping, !!.var,
+               column_names = column_names,
+               percentage_label_decimal_places = percentage_label_decimal_places,
+               add_grouping = add_grouping,
+               na.rm = na.rm) %>%
+      replace_na(na_replacement_list)
+  }) %>%
+    mutate(!!long_label_column_names[[1]] := map_chr(.vars, quo_name)[first_which_non_na_at(., !!!.vars)],
+           !!long_label_column_names[[2]] := first_non_nas_at(., !!!.vars)) %>%
+    select(!!!labels, !!!.grouping, !!!column_names)
+}
+
 
 # For use with a tibble in a pipe:
 # Using one-group prop.test, adds confidence intervals (with given conf.level)

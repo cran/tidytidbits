@@ -5,8 +5,9 @@
 \title{Title}
 \usage{
 add_prop_test(.df, x, n, p = NULL, CI_lower_name = "CI_lower",
-  CI_upper_name = "CI_upper", p_name = "p", alternative = c("two.sided",
-  "less", "greater"), conf.level = 0.95, correct = TRUE)
+  CI_upper_name = "CI_upper", p_name = "p",
+  alternative = c("two.sided", "less", "greater"), conf.level = 0.95,
+  correct = TRUE)
 }
 \arguments{
 \item{.df}{A data frame}

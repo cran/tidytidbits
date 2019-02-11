@@ -5,7 +5,12 @@ functions within the scope of data analysis and plotting.
 
 # Installation
 
-Install from bitbucket:
+Install from CRAN:
+```r
+install.packages("tidytidbits")
+```
+
+Or install the latest git version from bitbucket:
 ```r
 devtools::install_bitbucket("mwiesweg/tidytidbits")
 ```

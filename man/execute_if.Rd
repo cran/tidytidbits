@@ -27,8 +27,6 @@ Result of .language
 \description{
 A verb for a magrittr pipeline:
 execute_if_else: The language is executed only if .predicate is true.
-
-execute_if_else: Like execute_if, but with an additional field of language which is executed if predicate is false
 }
 \examples{
 library(magrittr)

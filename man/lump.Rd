@@ -4,8 +4,8 @@
 \alias{lump}
 \title{Generic lumping}
 \usage{
-lump(levels, count, n, prop, other_level = "Other", ties.method = c("min",
-  "average", "first", "last", "random", "max"))
+lump(levels, count, n, prop, other_level = "Other",
+  ties.method = c("min", "average", "first", "last", "random", "max"))
 }
 \arguments{
 \item{levels}{Vector of levels}
