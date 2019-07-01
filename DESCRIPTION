@@ -1,7 +1,7 @@
 Package: tidytidbits
 Type: Package
 Title: A Collection of Tools and Helpers Extending the Tidyverse
-Version: 0.2.0
+Version: 0.2.1
 Author: Marcel Wiesweg [aut, cre]
 Maintainer: Marcel Wiesweg <marcel.wiesweg@uk-essen.de>
 Authors@R: person("Marcel", "Wiesweg", email = "marcel.wiesweg@uk-essen.de", role = c("aut", "cre"))
@@ -18,6 +18,6 @@ Imports: utils, stats, grDevices, methods, dplyr, forcats, grid, purrr,
 Suggests: survival
 RoxygenNote: 6.1.1
 NeedsCompilation: no
-Packaged: 2019-02-11 13:47:06 UTC; wiesweg
+Packaged: 2019-07-01 14:56:19 UTC; wiesweg
 Repository: CRAN
-Date/Publication: 2019-02-11 14:20:02 UTC
+Date/Publication: 2019-07-01 16:00:03 UTC

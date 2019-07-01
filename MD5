@@ -1,6 +1,6 @@
-9a77e8dd5a318706245233131c1db799 *DESCRIPTION
+508ad6dfe370e4ff7b12145148c832ad *DESCRIPTION
 28722bf9171f17b162081215c8e306af *NAMESPACE
-65acfcb7a7591920d9b01d5c3862b2dc *NEWS.md
+dbb62809086def3928aee1cfd1004d9c *NEWS.md
 68b329da9893e34099c7d8ad5cb9c940 *R/deprecated.R
 438a410c6ce652f199f80e7de2a9f4a6 *R/dina.R
 fc98b747fa74a8c278101907b37464d4 *R/dplyr-like.R
@@ -9,7 +9,7 @@ e2fbe463bc56dbb4b065af41a2292a42 *R/forcats-like.R
 707d4fc37588084624e014532e805473 *R/lump.R
 cdbb948ca6b56eb4ec376d1090350ae2 *R/na.R
 639d6dbe7ae39c6a56fc4e10f7135dee *R/plotting.R
-663bc732c08a2d4c85451e0c4d39e6fa *R/purrr-like.R
+81707b47379d9c021b4dd36bba1767ca *R/purrr-like.R
 0b42f87fb0b51ed16a2eb07d00ada0fe *R/rlang-like.R
 dc78409ea479a5e2c97f54fb27b6be95 *R/stringr-like.R
 bd9a65d4ac3841e6894b96057a92ebd1 *R/tidytidbits.R

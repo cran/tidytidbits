@@ -1,3 +1,8 @@
+# tidytidbits 0.2.1
+
+* Remove warning introduced by rlang update:
+  when using env_has, extract environment from quosure instead passing the quosure itself
+
 # tidytidbits 0.2.0
 
 * added `count_at` to perform `count_by` for multiple variables and return the aggregated results in one tibble
