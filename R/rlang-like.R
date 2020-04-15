@@ -25,7 +25,7 @@ eval_unquoted <- function(...)
   snippets <- quos(...)
   for (snippet in snippets)
   {
-    expr <- quo_expr(snippet)
+    expr <- quo_squash(snippet)
     env <- get_env(snippet)
     res <- rlang::eval_bare(expr, env)
   }
@@ -63,7 +63,7 @@ syntactically_safe <- function(expr_strings)
 #' @export
 print_deparsed <- function(language)
 {
-  language <- quo_expr(enquo(language))
+  language <- quo_squash(enquo(language))
   cat("Language ", as.character(language), " \n")
   if (is_symbol(language))
     return()
@@ -93,7 +93,7 @@ print_deparsed <- function(language)
 #' expression_list(a+b+c+d)
 expression_list <- function(expr, seps = "+")
 {
-  expr <- quo_expr(enquo(expr))
+  expr <- quo_squash(enquo(expr))
   if (is_symbol(expr))
     return(list(expr))
 

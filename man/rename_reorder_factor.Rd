@@ -4,8 +4,12 @@
 \alias{rename_reorder_factor}
 \title{Rename and reorder a factor.}
 \usage{
-rename_reorder_factor(.f, value_label_dict, reorder_vector,
-  reorder_by_value_label_dict = T)
+rename_reorder_factor(
+  .f,
+  value_label_dict,
+  reorder_vector,
+  reorder_by_value_label_dict = T
+)
 }
 \arguments{
 \item{.f}{A factor or vector (if .f is not yet a factor, it is made one)}

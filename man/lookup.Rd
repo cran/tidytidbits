@@ -9,23 +9,17 @@
 \alias{lookup_num}
 \title{Lookup in a dictionary}
 \usage{
-lookup(dict, ..., default = NA, dict_key_is_regex = F,
-  key_is_regex = F)
+lookup(dict, ..., default = NA, dict_key_is_regex = F, key_is_regex = F)
 
-lookup_int(dict, ..., default = NA, dict_key_is_regex = F,
-  key_is_regex = F)
+lookup_int(dict, ..., default = NA, dict_key_is_regex = F, key_is_regex = F)
 
-lookup_chr(dict, ..., default = NA, dict_key_is_regex = F,
-  key_is_regex = F)
+lookup_chr(dict, ..., default = NA, dict_key_is_regex = F, key_is_regex = F)
 
-lookup_lgl(dict, ..., default = NA, dict_key_is_regex = F,
-  key_is_regex = F)
+lookup_lgl(dict, ..., default = NA, dict_key_is_regex = F, key_is_regex = F)
 
-lookup_dbl(dict, ..., default = NA, dict_key_is_regex = F,
-  key_is_regex = F)
+lookup_dbl(dict, ..., default = NA, dict_key_is_regex = F, key_is_regex = F)
 
-lookup_num(dict, ..., default = NA, dict_key_is_regex = F,
-  key_is_regex = F)
+lookup_num(dict, ..., default = NA, dict_key_is_regex = F, key_is_regex = F)
 }
 \arguments{
 \item{dict}{A dictionaryish vector (named: key -> value)}

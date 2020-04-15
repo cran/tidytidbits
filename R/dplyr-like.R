@@ -24,7 +24,7 @@ execute_in_pipeline <- function(.data, .language)
   # Prepare such a call in our caller's environment
 
   magrittr_call <- quo(`%>%`(., !!.language))
-  magrittr_call <- quo_expr(magrittr_call)
+  magrittr_call <- quo_squash(magrittr_call)
   #alternative
   #magrittr_call <- parse_expr(str_c(". %>% ", quo_text(.language)))
 
@@ -359,7 +359,7 @@ interlude <- function(.df, .language)
   if (quo_is_missing(.language))
     return(.df)
 
-  expr <- quo_expr(.language)
+  expr <- quo_squash(.language)
   lang_env <- get_env(.language)
   exec_env <- child_env(lang_env)
   # Provide the "." binding
@@ -420,11 +420,11 @@ format_numbers_at <- function(.tbl, .vars,
                               decimal_places = 1,
                               remove_trailing_zeroes = T)
 {
-  mutate_at(.tbl, .vars, funs(
-    as_formatted_number(.,
-                        decimal_places = decimal_places,
-                        remove_trailing_zeroes = remove_trailing_zeroes)
-  ))
+  mutate_at(.tbl, .vars,
+            ~as_formatted_number(.,
+                                 decimal_places = decimal_places,
+                                 remove_trailing_zeroes = remove_trailing_zeroes)
+  )
 }
 
 #' Format numeric columns for display
@@ -454,15 +454,14 @@ format_p_values_at <- function(.tbl, .vars,
                                alpha = 0.05,
                                ns_replacement = NULL)
 {
-  mutate_at(.tbl, .vars, funs(
-    as_formatted_p_value(.,
-                         decimal_places = decimal_places,
-                         prefix = prefix,
-                         less_than_cutoff = less_than_cutoff,
-                         remove_trailing_zeroes = remove_trailing_zeroes,
-                         alpha = alpha,
-                         ns_replacement = ns_replacement)
-  ))
+  mutate_at(.tbl, .vars, ~as_formatted_p_value(.,
+                                               decimal_places = decimal_places,
+                                               prefix = prefix,
+                                               less_than_cutoff = less_than_cutoff,
+                                               remove_trailing_zeroes = remove_trailing_zeroes,
+                                               alpha = alpha,
+                                               ns_replacement = ns_replacement)
+  )
 }
 
 # Deprecate?
@@ -555,7 +554,7 @@ count_by <- function(.tbl,
 
   if (na.rm)
   {
-    grouping_lang <- keep(grouping, ~quo_is_lang(.x))
+    grouping_lang <- keep(grouping, ~quo_is_call(.x))
     grouping_symbol <- keep(grouping, ~quo_is_symbol(.x))
     complete <- rep(T, nrow(.tbl))
     if (has_length(grouping_lang))

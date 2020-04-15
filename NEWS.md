@@ -1,3 +1,7 @@
+# tidytidbits 0.2.2
+
+* Renames to adapt to rlang/tidyverse deprecations and dplyr 1.0.0 release
+
 # tidytidbits 0.2.1
 
 * Remove warning introduced by rlang update:

@@ -4,8 +4,14 @@
 \alias{count_by}
 \title{Count according to grouping}
 \usage{
-count_by(.tbl, ..., column_names = c("n", "rel", "percent"),
-  percentage_label_decimal_places = 1, add_grouping = T, na.rm = F)
+count_by(
+  .tbl,
+  ...,
+  column_names = c("n", "rel", "percent"),
+  percentage_label_decimal_places = 1,
+  add_grouping = T,
+  na.rm = F
+)
 }
 \arguments{
 \item{.tbl}{A data frame}

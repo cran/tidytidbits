@@ -4,8 +4,16 @@
 \alias{save_png}
 \title{Save plot as PNG}
 \usage{
-save_png(plot, folder, fileBaseName, width, height, dpi = 300,
-  background = c("white", "transparent"), ...)
+save_png(
+  plot,
+  folder,
+  fileBaseName,
+  width,
+  height,
+  dpi = 300,
+  background = c("white", "transparent"),
+  ...
+)
 }
 \arguments{
 \item{plot}{A plot object that can be printed, e.g. result of ggplot2, plot_grid}

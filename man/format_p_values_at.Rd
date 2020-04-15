@@ -4,9 +4,16 @@
 \alias{format_p_values_at}
 \title{Format numeric columns for display}
 \usage{
-format_p_values_at(.tbl, .vars, decimal_places = 3, prefix = "p",
-  less_than_cutoff = 0.001, remove_trailing_zeroes = T, alpha = 0.05,
-  ns_replacement = NULL)
+format_p_values_at(
+  .tbl,
+  .vars,
+  decimal_places = 3,
+  prefix = "p",
+  less_than_cutoff = 0.001,
+  remove_trailing_zeroes = T,
+  alpha = 0.05,
+  ns_replacement = NULL
+)
 }
 \arguments{
 \item{.tbl}{A data frame}

@@ -315,7 +315,7 @@ prepend_object <- function(x, .l, name = NULL, before = 1)
   l_env <- rlang::quo_get_env(l_quo)
   if (rlang::quo_is_symbol(l_quo) && !rlang::env_has(l_env, rlang::quo_name(l_quo), inherit = T))
     .l <- list()
-  .l <- rlang::prepend(.l, list(x), before = before)
+  .l <- purrr::prepend(.l, list(x), before = before)
   if (!is_null(name))
     names(.l)[[before]] <- name
   return (.l)

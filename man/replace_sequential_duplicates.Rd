@@ -4,8 +4,7 @@
 \alias{replace_sequential_duplicates}
 \title{Replace sequential duplicates}
 \usage{
-replace_sequential_duplicates(strings, replace_with = "",
-  ordering = NULL)
+replace_sequential_duplicates(strings, replace_with = "", ordering = NULL)
 }
 \arguments{
 \item{strings}{Character vector}

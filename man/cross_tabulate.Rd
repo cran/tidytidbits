@@ -4,8 +4,7 @@
 \alias{cross_tabulate}
 \title{Create cross table from a tibble}
 \usage{
-cross_tabulate(.df, ..., useNA = c("no", "ifany", "always"),
-  dnn = NULL)
+cross_tabulate(.df, ..., useNA = c("no", "ifany", "always"), dnn = NULL)
 }
 \arguments{
 \item{.df}{A data frame}

@@ -4,8 +4,7 @@
 \alias{lookup_function_from_dict}
 \title{Creating a lookup function from dictionary}
 \usage{
-lookup_function_from_dict(dict, default = identity,
-  dict_key_is_regex = F)
+lookup_function_from_dict(dict, default = identity, dict_key_is_regex = F)
 }
 \arguments{
 \item{dict}{A dictionaryish character vector (named: key -> value)}

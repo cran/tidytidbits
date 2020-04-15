@@ -4,9 +4,15 @@
 \alias{as_formatted_p_value}
 \title{Formatting p values}
 \usage{
-as_formatted_p_value(x, decimal_places = 3, prefix = "p",
-  less_than_cutoff = 0.001, remove_trailing_zeroes = T, alpha = 0.05,
-  ns_replacement = NULL)
+as_formatted_p_value(
+  x,
+  decimal_places = 3,
+  prefix = "p",
+  less_than_cutoff = 0.001,
+  remove_trailing_zeroes = T,
+  alpha = 0.05,
+  ns_replacement = NULL
+)
 }
 \arguments{
 \item{x}{Numeric vector}

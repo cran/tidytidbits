@@ -4,10 +4,18 @@
 \alias{count_at}
 \title{Count by multiple variables}
 \usage{
-count_at(.tbl, .vars, .grouping = vars(), label_style = "long",
+count_at(
+  .tbl,
+  .vars,
+  .grouping = vars(),
+  label_style = "long",
   long_label_column_names = c("variable", "category"),
-  column_names = c("n", "rel", "percent"), na_label = "missing",
-  percentage_label_decimal_places = 1, add_grouping = T, na.rm = F)
+  column_names = c("n", "rel", "percent"),
+  na_label = "missing",
+  percentage_label_decimal_places = 1,
+  add_grouping = T,
+  na.rm = F
+)
 }
 \arguments{
 \item{.tbl}{A data frame}

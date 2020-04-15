@@ -4,8 +4,7 @@
 \alias{format_numbers_at}
 \title{Format numeric columns for display}
 \usage{
-format_numbers_at(.tbl, .vars, decimal_places = 1,
-  remove_trailing_zeroes = T)
+format_numbers_at(.tbl, .vars, decimal_places = 1, remove_trailing_zeroes = T)
 }
 \arguments{
 \item{.tbl}{A data frame}

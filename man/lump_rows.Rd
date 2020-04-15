@@ -4,9 +4,17 @@
 \alias{lump_rows}
 \title{Lump rows of a tibble}
 \usage{
-lump_rows(.df, .level, .count, summarising_statements = quos(), n, prop,
-  remaining_levels, other_level = "Other", ties.method = c("min",
-  "average", "first", "last", "random", "max"))
+lump_rows(
+  .df,
+  .level,
+  .count,
+  summarising_statements = quos(),
+  n,
+  prop,
+  remaining_levels,
+  other_level = "Other",
+  ties.method = c("min", "average", "first", "last", "random", "max")
+)
 }
 \arguments{
 \item{.df}{A data frame}
