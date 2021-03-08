@@ -1,3 +1,7 @@
+# tidytidbits 0.2.3
+
+* remove the interlude() method, which was unused but made assumptions that were not portable to new versions of rlang
+
 # tidytidbits 0.2.2
 
 * Renames to adapt to rlang/tidyverse deprecations and dplyr 1.0.0 release

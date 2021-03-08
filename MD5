@@ -1,9 +1,9 @@
-42d8e1c045c5a8f5e61fa1dc8ad986c3 *DESCRIPTION
-28722bf9171f17b162081215c8e306af *NAMESPACE
-88a849235a7fc317b7f3f1ace2785b90 *NEWS.md
+c517892fb5a9be3f7937621710a91367 *DESCRIPTION
+bc67c1ae17ea5e3d1bd8c1ebed96373b *NAMESPACE
+f6e7c14e3abbdc92086bfa5f00246604 *NEWS.md
 68b329da9893e34099c7d8ad5cb9c940 *R/deprecated.R
 438a410c6ce652f199f80e7de2a9f4a6 *R/dina.R
-2c6431dec433eb408ebd85c87e1abb8c *R/dplyr-like.R
+a21d689e80d85a3ab39b0edaa0694c02 *R/dplyr-like.R
 e2fbe463bc56dbb4b065af41a2292a42 *R/forcats-like.R
 795f49d087edb6b486618d4cf44c321d *R/logical.R
 707d4fc37588084624e014532e805473 *R/lump.R
@@ -44,7 +44,6 @@ ea15e6bfb463e4d8ec2b199d3a864d9a *man/first_not_na.Rd
 f039bd434f697f20ceea719ba3a05993 *man/format_numbers_at.Rd
 ca8fc7f73c1344f1aa444b2f9c29ffb1 *man/format_p_values_at.Rd
 405145706a9dd54a141a02b2a8b44c39 *man/identity_order.Rd
-71b137d1153bea57e6efdadb98ebb594 *man/interlude.Rd
 d86244e50964bca37e3eb4cf5bf507b2 *man/invalid.Rd
 327ac09fcf95206fffeaad91a4bdf5fc *man/invert_value_and_names.Rd
 fb498f31d7f338bfd449a682495c3a86 *man/local_variables.Rd
