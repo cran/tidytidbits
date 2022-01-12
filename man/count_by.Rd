@@ -20,7 +20,7 @@ count_by(
 
 \item{column_names}{vector if size 1 to 3, giving the names of (in order if unnamed, or named with n, rel, percent)
 the column containing the count, the relative proportion, and the latter formatted as a percent label.
-If a name is not contained, it will not be added.}
+If a name is not contained, it will not be added (requires named vector).}
 
 \item{percentage_label_decimal_places}{Decimal precision of the percent label}
 

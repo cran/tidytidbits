@@ -2,7 +2,7 @@
 % Please edit documentation in R/dplyr-like.R
 \name{add_prop_test}
 \alias{add_prop_test}
-\title{Title}
+\title{Add results of prop.test to data frame}
 \usage{
 add_prop_test(
   .df,
@@ -34,7 +34,12 @@ add_prop_test(
 Data frame with columns added
 }
 \description{
-Title
+Adds prop.test results as columns to data frame based on data in columns
+For use with a tibble in a pipe:
+Using one-group prop.test, adds confidence intervals (with given conf.level)
+for the proportion of x positive results in n trials,
+and the p value that the proportion is equal to p (default: 0.5)
+(to add the estimated proportion itself, use \code{\link{count_by}})
 }
 \examples{
 library(magrittr)

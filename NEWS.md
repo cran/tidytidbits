@@ -1,3 +1,14 @@
+# tidytidbits 0.3.0
+
+* add categorical_test_by and contingency_table_by for convenient categorical 
+  testing in a pipeline. Supersedes cross_tabulate with clean parameters.
+* explicitly use a character column for variable value in count_at to be
+  consistent with newer versions of replace_na
+* use and require dplyr 1.0.0
+* hard lifecycle cut for unused and not future proof code: execute_* removed
+* hard lifecycle cut for unused method superseded with new dplyr row/column
+  wise approaches: add_summary_* (also depending on not future proof code)
+
 # tidytidbits 0.2.3
 
 * remove the interlude() method, which was unused but made assumptions that were not portable to new versions of rlang

@@ -1,169 +1,3 @@
-#' Executing language as if in a pipeline
-#'
-#' Executes the given language as if it was part of a magrittr pipeline\cr
-#' \code{... \%>\% .language}\cr
-#' while .data is the lhs value provided to .language as parameter by magrittr.
-#'
-#' Note that language is evaluated as a quosure in its captured environment.
-#' This is fine if this method is called as a secondary helper and .language is already a quosure;
-#' otherwise you may want to explicitly set the quosure's environment to your caller's env.
-#'
-#' @param .data A data frame
-#' @param .language Language
-#'
-#' @return Result of the executed language
-#' @export
-execute_in_pipeline <- function(.data, .language)
-{
-  # nice thing is that all !! unquotation for the environment from where we are called is done
-  # by enquo either here or one level up
-  .language <- enquo(.language)
-  # the quosure stores the environment from where it originates
-  pipeline_env <- get_env(.language)
-  # Something like ". %>% ..." creates a magrittr functional sequence, which can be called
-  # Prepare such a call in our caller's environment
-
-  magrittr_call <- quo(`%>%`(., !!.language))
-  magrittr_call <- quo_squash(magrittr_call)
-  #alternative
-  #magrittr_call <- parse_expr(str_c(". %>% ", quo_text(.language)))
-
-  magrittr_call <- new_quosure(magrittr_call, env=pipeline_env)
-  # Call magrittr::%>%, creating a functiona sequence
-  fseq <- eval_tidy(magrittr_call)
-  # Call the sequence with our .data parameter
-  rlang::invoke(fseq, list(.data))
-}
-
-#' Conditional execution in a pipeline
-#'
-#' A verb for a magrittr pipeline:
-#' execute_if_else: The language is executed only if .predicate is true.
-#'
-#' @param .data Data argument, typical "first" argument in dplyr verbs
-#' @param .predicate Evaluated to boolean. If true, executes and returns language; otherwise, returns untouched .data
-#' @param .language Language call to execute. Write is just as if you would without the execute_if:
-#'    Will be used as the right-hand side of "\%>\%" with all possible options of magrittr.
-#'
-#' @return Result of .language
-#' @export
-#'
-#' @examples
-#' library(magrittr)
-#' library(dplyr)
-#' library(tibble)
-#' library(stringr)
-#' convert_to_quartiles <- TRUE
-#' tibble(score=c(1,2,3,4,1,2,3,4,2,3,2,3,4,3,3)) %>%
-#'   mutate(do_something=1) %>%
-#'   execute_if(convert_to_quartiles,
-#'              mutate(score = cut(score, 4, labels = str_c("Quartile ", 1:4)))) %>%
-#'   filter(score > 2)
-execute_if <- function(.data, .predicate, .language)
-{
-  .predicate <- enquo(.predicate)
-  if (eval_tidy(.predicate, data = .data))
-  {
-    .language <- enquo(.language)
-    execute_in_pipeline(.data, !!.language)
-  }
-  else
-    .data
-}
-
-#' execute_if_else: Like execute_if, but with an additional field of language which is executed if predicate is false
-#' @param .language_true Execute if predicate it TRUE
-#' @param .language_false Execute if predicate it FALSE
-#' @export
-#'
-#' @rdname execute_if
-execute_if_else <- function(.data, .predicate, .language_true, .language_false)
-{
-  .predicate <- enquo(.predicate)
-  if (eval_tidy(.predicate, data = .data))
-    .language <- enquo(.language_true)
-  else
-    .language <- enquo(.language_false)
-
-  execute_in_pipeline(.data, !!.language)
-}
-
-#' Add summary to tibble
-#'
-#' A verb for a dplyr pipeline:
-#' Performs a call to \code{summarise()}, but does not reduce the data frame to one row per group,
-#' instead, adds the resulting fields to every row belonging to that group,
-#' returning the original frame with added/changed columns.
-#' Effectively, this is like calling \code{summarise()}, and then calling \code{mutate()} with all the resulting columns.
-#' @param .data Data argument, typical "first" argument in dplyr verbs
-#' @param .language A call to \code{summarise()},
-#'    or another method performing equivalent aggregation (potentially wrapping \code{summarise()})
-#'
-#' @return The tibble with added columns
-#' @export
-add_summary <- function(.data, .language)
-{
-  .language <- enquo(.language)
-
-  grouping_vars <- group_vars(.data)
-  # get summarised data
-  summarised_data <- execute_in_pipeline(.data, !!.language)
-
-  if (has_length(grouping_vars))
-  {
-    .data %<>% inner_join(summarised_data, by=grouping_vars, suffix=c("", "summary-"))
-  }
-  else
-  {
-    if (nrow(summarised_data) == 1)
-    {
-      # no grouping -> we have a summary tibble with one row
-      summarised_columns <- colnames(summarised_data)[!colnames(summarised_data) %in% grouping_vars]
-      for (col in summarised_columns)
-      {
-        .data %<>% mutate(!!col := summarised_data[[col]])
-      }
-    }
-    else
-    {
-      # No grouping accessible, but apparently there was grouping applied by the summarising language.
-      # This can be the case if some integrated method like count_by was used instead of summarise().
-      # Perform a merge on common columns.
-      # This fails in corner cases (generated columns with the same name as table columns), but sorry for now.
-      .data %<>%
-        inner_join(summarised_data,
-                   # need explicit by to avoid printed message
-                   by = intersect(tbl_vars(.), tbl_vars(summarised_data)),
-                   suffix=c("", "summary-"))
-    }
-  }
-  .data
-}
-
-#' Add summary to tibble
-#'
-#' A verb for a dplyr pipeline:
-#' Groups the frame by ... in addition to the current grouping,
-#' then calls \code{\link{add_summary}}, then returns the frame with the mutated summarising columns
-#' in the same grouping state as it was before this function was called.
-#' @param .data Data argument, typical "first" argument in dplyr verbs
-#' @param .language A call to \code{summarise()},
-#'    or another method performing equivalent aggregation (potentially wrapping \code{summarise()})
-#' @param ... Parameters for group_by
-#'
-#' @return The tibble with added columns
-#' @export
-add_summary_by <- function(.data, .language, ...)
-{
-  .language <- enquo(.language)
-  vars <- quos(...)
-  previous_grouping <- groups(.data)
-  .data %>%
-    group_by(!!!vars, add = T) %>%
-    add_summary(!!.language) %>%
-    group_by(!!!previous_grouping, add = F)
-}
-
 #' Lump rows of a tibble
 #'
 #' A verb for a dplyr pipeline:
@@ -285,47 +119,6 @@ lump_rows <- function(.df, .level, .count, summarising_statements = quos(),
   .df
 }
 
-#' Create cross table from a tibble
-#'
-#' A wrapper of table() for convenient use in a dplyr pipeline:
-#' Pass the factors to tabulate as symbols or expressions like you would in mutate().
-#' useNA and dnn are passed to table().
-
-#' @param .df A data frame
-#' @param ... Factors to tabulate by: symbolic column names / language
-#' @param useNA,dnn passed to \code{\link{table}()}
-#'
-#' @return Result from a call to \code{\link{table}()}
-#' @export
-#'
-#' @examples
-#' library(magrittr)
-#' if (requireNamespace("survival", quietly = TRUE))
-#' {
-#'    survival::bladder1 %>%
-#'       cross_tabulate(treatment, recur) %>%
-#'       chisq.test()
-#' }
-cross_tabulate <- function(.df, ...,
-                           useNA = c("no", "ifany", "always"),
-                           dnn = NULL)
-{
-  factors <- quos(...)
-  useNA <- match.arg(useNA)
-  if (is_null(dnn))
-    dnn <- if_else(names(factors) == "",
-                   map_chr(factors, quo_name),
-                   names(factors))
-  names(factors) <- NULL
-
-  table_args <- list(useNA = useNA,
-                     dnn = dnn)
-  args <- c(factors, table_args)
-
-  call <- quo(table(!!!args))
-  eval_tidy(call, data = .df)
-}
-
 #' Format numeric columns for display
 #'
 #' Combines \code{\link{mutate_at}()} and \code{\link{as_formatted_number}()}
@@ -393,29 +186,6 @@ format_p_values_at <- function(.tbl, .vars,
   )
 }
 
-# Deprecate?
-count_and_summarise <- function(.tbl,
-                                ...,
-                                columns = c("n", "rel", "percent"),
-                                percentage_label_decimal_places = 1,
-                                group_by = NULL)
-{
-  stopifnot(has_length(columns) && length(columns) <=3)
-  additional_statements <- quos(...)
-  previous_grouping <- groups(.tbl)
-  .tbl %>%
-    execute_if(has_length(group_by),
-               group_by(!!!group_by)) %>%
-    summarise(!!columns[[1]] := n(), !!!additional_statements) %>%
-    execute_if(length(columns) >= 2,
-               mutate(!!columns[[2]] := n/sum(n))
-    ) %>%
-    execute_if(length(columns) >= 3,
-               mutate(!!columns[[3]] := as_percentage_label(!!sym(columns[[2]]), percentage_label_decimal_places))
-    ) %>%
-    execute_if(has_length(group_by),
-               group_by(!!!group_by, add = F))
-}
 
 #' Count according to grouping
 #'
@@ -427,7 +197,7 @@ count_and_summarise <- function(.tbl,
 #' @param ... Columns / expressions by which to group / which shall be used for counting.
 #' @param column_names vector if size 1 to 3, giving the names of (in order if unnamed, or named with n, rel, percent)
 #'     the column containing the count, the relative proportion, and the latter formatted as a percent label.
-#'     If a name is not contained, it will not be added.
+#'     If a name is not contained, it will not be added (requires named vector).
 #' @param percentage_label_decimal_places Decimal precision of the percent label
 #' @param add_grouping Shall a pre-existing grouping be preserved for counting (adding the newly specified grouping)?
 #'     Default is yes, which differs from group_by.
@@ -501,7 +271,7 @@ count_by <- function(.tbl,
   }
 
   .tbl %<>%
-    group_by(!!!grouping, add = add_grouping) %>%
+    group_by(!!!grouping, .add = add_grouping) %>%
     tally() %>%
     mutate(.rel.count.by.=n/sum(n),
            .percent.count.by. = as_percentage_label(.data$.rel.count.by.,
@@ -512,7 +282,7 @@ count_by <- function(.tbl,
 
   if (add_grouping)
   {
-    .tbl %<>% group_by(!!!previous_grouping, add=F)
+    .tbl %<>% group_by(!!!previous_grouping, .add=F)
   }
   .tbl
 }
@@ -564,7 +334,7 @@ count_at <- function(.tbl,
     var_name <- quo_name(.var)
     na_replacement_list <- set_names(list(na_label), var_name)
     .tbl %>%
-      mutate(!!var_name := if(is.factor(!!.var)) as.character(!!.var) else !!.var) %>%
+      mutate(!!var_name := as.character(!!.var)) %>%
       count_by(!!!.grouping, !!.var,
                column_names = column_names,
                percentage_label_decimal_places = percentage_label_decimal_places,
@@ -578,12 +348,14 @@ count_at <- function(.tbl,
 }
 
 
-# For use with a tibble in a pipe:
-# Using one-group prop.test, adds confidence intervals (with given conf.level)
-# for the proportion of x positive results in n trials,
-# and the p value that the proportion is equal to p (default: 0.5)
-# (to add the estimated proportion itself, use count_by)
-#' Title
+#' Add results of prop.test to data frame
+#'
+#' Adds prop.test results as columns to data frame based on data in columns
+#' For use with a tibble in a pipe:
+#' Using one-group prop.test, adds confidence intervals (with given conf.level)
+#' for the proportion of x positive results in n trials,
+#' and the p value that the proportion is equal to p (default: 0.5)
+#' (to add the estimated proportion itself, use \code{\link{count_by}})
 #'
 #' @param .df A data frame
 #' @param x The column/vector with the number of positive results
@@ -639,5 +411,146 @@ add_prop_test <- function(.df, x, n, p = NULL,
     select(-.prop_test)
 }
 
+#' Create data frame formed like a contingency-table
+#'
+#' Counts by the specified two variables and the pivots the
+#' count data frame wider to a two-dimensional contingency table.
+#' Please note that the resulting data frame is suitable for convenient
+#' output or use with functions that work on matrix-like data,
+#' but does not fulfill the tidy data criteria.
+#'
+#' @param .tbl A data frame
+#' @param var1 First column to count by
+#' @param var2 Second column to count by
+#' @param na.rm Shall NA values be removed prior to counting?
+#' @param add_margins Add row- and column wise margins as extra column and row
+#'
+#' @return A data frame
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' if (requireNamespace("datasets", quietly = TRUE))
+#' {
+#'    mtcars %>% contingency_table_by(cyl, gear)
+#' }
+contingency_table_by <- function(.tbl,
+                                 var1,
+                                 var2,
+                                 na.rm = F,
+                                 add_margins = F)
+{
+  var1 <- enquo(var1)
+  var2 <- enquo(var2)
+
+  .tbl %>%
+    count_by(!!var1, !!var2,
+             na.rm = na.rm,
+             column_names = c(n="n")) %>%
+    pivot_wider(id_cols = 1,
+                names_from = 2,
+                values_from = 3,
+                values_fill = 0,
+                names_prefix = str_c(as_label(var2), ":")
+    ) ->
+    table
+
+  if (add_margins)
+  {
+    table %>%
+      rowwise() %>%
+      mutate(sum = sum(c_across(where(is.numeric)))) %>%
+      ungroup() %>%
+      bind_rows(summarise(., across(where(is.numeric), sum)) %>%
+                  mutate("{{var1}}" := "sum"))
+  }
+  else
+  {
+    table
+  }
+}
+
+#' Convert contingency table to classical R matrix
+#'
+#' Converts the result of \code{\link{contingency_table_by}}
+#' to a classical matrix
+#'
+#' @param table_frame Result of \code{\link{contingency_table_by}}
+#'
+#' @return A matrix
+#' @export
+contingency_table_as_matrix <- function(table_frame)
+{
+  table_frame %>%
+    select(where(is.numeric)) %>%
+    as.matrix()
+}
+
+default_categorical_test_choice <- function(matrix)
+{
+  if (min(matrix) <= 5)
+    c(fisher=fisher.test)
+  else
+    c(chisq=chisq.test)
+}
+
+#' Categorical test in a pipe
+#'
+#' Performs classical categorical tests on two columns of a
+#' data frame.
+#' Per default, will perform \code{\link{chisq.test}}
+#' or \code{\link{fisher.test}} on the
+#' contingency table created by var1 and var2.
+#'
+#' Returns a one-line data frame as result and thus plays nicely
+#' with for example \code{\link{map_dfr}}.
+#'
+#' @inheritParams contingency_table_by
+#' @param test_function_generator A function receiving the matrix to test and
+#' returning a named vector with the test function to use. The default uses
+#' fisher.test if one count is 5 or lower, otherwise chisq.test.
+#' Test functions must return a value with at least one component named "p.value".
+#' @param ... Passed on to the test function
+#'
+#' @return A one-row data frame with the columns:\itemize{
+#'     \item "var1,var2": The tested variables
+#'     \item "test": Label of the test function (default: fisher or chisq)
+#'     \item "p-value": P value
+#'     \item "result": List column with full result object (default: htest)
+#'     \item "contingency_table": List column with contingency table data frame
+#'     as return by \code{\link{contingency_table_by}}
+#'     }
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' if (requireNamespace("datasets", quietly = TRUE))
+#' {
+#'    mtcars %>% categorical_test_by(cyl >= 6, gear)
+#' }
+categorical_test_by <- function(.tbl, var1, var2, na.rm = T,
+                                test_function_generator = NULL,
+                                ...)
+{
+  var1 <- enquo(var1)
+  var2 <- enquo(var2)
+
+  table_frame <- contingency_table_by(.tbl, !!var1, !!var2, na.rm = na.rm)
+  matrix <- contingency_table_as_matrix(table_frame)
+  if (is.null(test_function_generator))
+  {
+    test_function_generator = default_categorical_test_choice
+  }
+  test <- test_function_generator(matrix)
+  result <- test[[1]](matrix, ...)
+
+  tibble(var1 = as_label(var1),
+         var2 = as_label(var2),
+         test = names(test)[[1]],
+         `p-value` = result$p.value,
+         result = list(result),
+         contingency_table = list(table_frame)
+  )
+}
 
 
