@@ -1,3 +1,7 @@
+# tidytidbits 0.3.1
+
+* fix deprecated _along methods in rlang which cause CRAN check errors
+
 # tidytidbits 0.3.0
 
 * add categorical_test_by and contingency_table_by for convenient categorical 

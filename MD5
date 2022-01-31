@@ -1,6 +1,6 @@
-2d9dec0058600bd525bd36bf5516dfe3 *DESCRIPTION
+99fa0684627f75533bc6686a93d24ddb *DESCRIPTION
 5028f06ddb12e7827d093ec31d740de2 *NAMESPACE
-1e638184047d4ab08e3a18ded45e783d *NEWS.md
+8e5783904f0ae714e8209cf1c039df3b *NEWS.md
 68b329da9893e34099c7d8ad5cb9c940 *R/deprecated.R
 438a410c6ce652f199f80e7de2a9f4a6 *R/dina.R
 8f28ff3691448755bb05b6527cef86e8 *R/dplyr-like.R
@@ -9,9 +9,9 @@ e2fbe463bc56dbb4b065af41a2292a42 *R/forcats-like.R
 707d4fc37588084624e014532e805473 *R/lump.R
 cdbb948ca6b56eb4ec376d1090350ae2 *R/na.R
 639d6dbe7ae39c6a56fc4e10f7135dee *R/plotting.R
-6d58f735a9f0a5d5a8074a5996c0cdac *R/purrr-like.R
+86a4741c0beba9c1b1bd03a83c16294a *R/purrr-like.R
 2249a2bf8c6721e615b2a6b4d7b33cbe *R/rlang-like.R
-dc78409ea479a5e2c97f54fb27b6be95 *R/stringr-like.R
+1d549d54c0bd6be512206a46af1e942d *R/stringr-like.R
 6d9ad759bea42fc4eb47044237a08b6d *R/tidytidbits.R
 738d0e7a0c34b45a736a7c24506bdf20 *R/tuple-assignment.R
 98dc249e650607d4e8c2d8152520b260 *R/utilities.R

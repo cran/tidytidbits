@@ -10,7 +10,7 @@
 #' @export
 str_locate_match <- function(patterns, strings)
 {
-  matches <- int_along(patterns)
+  matches <- rep_along(patterns, na_int)
   for (i in seq_along(patterns))
   {
     str_matches <- str_locate(strings, patterns[[i]])

@@ -92,7 +92,7 @@ lookup_num <- lookup_dbl
 
     if (dict_key_is_regex)
     {
-      matches <- int_along(args)
+      matches <- rep_along(args, na_int)
       for (i in seq_along(args))
       {
         matches_per_key <- str_locate_match(dict_keys, args[[i]])
@@ -150,7 +150,7 @@ sequential_duplicates <- function(strings, ordering = NULL)
   {
     permutation <- ordering
   }
-  isduplicate <- lgl_along(strings)
+  isduplicate <- rep_along(strings, na_lgl)
   previous <- NULL
   for (i in seq_along(permutation))
   {
