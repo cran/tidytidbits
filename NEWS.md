@@ -1,3 +1,8 @@
+# tidytidbits 0.3.2
+
+* comply with new CRAN test checking for coercion 
+  of vectors with length > 1 in logical expression
+
 # tidytidbits 0.3.1
 
 * fix deprecated _along methods in rlang which cause CRAN check errors

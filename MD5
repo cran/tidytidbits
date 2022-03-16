@@ -1,11 +1,11 @@
-99fa0684627f75533bc6686a93d24ddb *DESCRIPTION
+1776fb15f6e6d67914be87bac11a9029 *DESCRIPTION
 5028f06ddb12e7827d093ec31d740de2 *NAMESPACE
-8e5783904f0ae714e8209cf1c039df3b *NEWS.md
+8f6a852be5fed2391c2a0a8e7726b09d *NEWS.md
 68b329da9893e34099c7d8ad5cb9c940 *R/deprecated.R
 438a410c6ce652f199f80e7de2a9f4a6 *R/dina.R
 8f28ff3691448755bb05b6527cef86e8 *R/dplyr-like.R
 e2fbe463bc56dbb4b065af41a2292a42 *R/forcats-like.R
-795f49d087edb6b486618d4cf44c321d *R/logical.R
+cdff83a00505fabeee4d22d0000a3340 *R/logical.R
 707d4fc37588084624e014532e805473 *R/lump.R
 cdbb948ca6b56eb4ec376d1090350ae2 *R/na.R
 639d6dbe7ae39c6a56fc4e10f7135dee *R/plotting.R
@@ -42,7 +42,7 @@ ea15e6bfb463e4d8ec2b199d3a864d9a *man/first_not_na.Rd
 f039bd434f697f20ceea719ba3a05993 *man/format_numbers_at.Rd
 ca8fc7f73c1344f1aa444b2f9c29ffb1 *man/format_p_values_at.Rd
 405145706a9dd54a141a02b2a8b44c39 *man/identity_order.Rd
-d86244e50964bca37e3eb4cf5bf507b2 *man/invalid.Rd
+bc3dc27b123a5e13902a10d362e7417f *man/invalid.Rd
 327ac09fcf95206fffeaad91a4bdf5fc *man/invert_value_and_names.Rd
 fb498f31d7f338bfd449a682495c3a86 *man/local_variables.Rd
 2aa06dffeb822da4dcf8ede1b2aa9a21 *man/lookup.Rd

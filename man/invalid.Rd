@@ -24,3 +24,10 @@ Note that this is per se not vectorised, because a non-empty list or vector is v
 \item \code{valid}: x is not invalid
 }}
 
+\examples{
+invalid(NULL) # TRUE
+invalid(NA) # TRUE
+invalid(list()) # TRUE
+invalid("a") # FALSE
+invalid(c(1,2,3)) # FALSE
+}

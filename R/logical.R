@@ -41,16 +41,38 @@ falsy <- function(x)
 #' @param x Any object, value or NULL
 #'
 #' @return logical
+#' @examples
+#' invalid(NULL) # TRUE
+#' invalid(NA) # TRUE
+#' invalid(list()) # TRUE
+#' invalid("a") # FALSE
+#' invalid(c(1,2,3)) # FALSE
 #' @export
 invalid <- function(x)
 {
-  return (is.null(x) || is.na(x) || (is.vector(x) && length(x) == 0))
+  if (is_null(x))
+  {
+    return(TRUE)
+  }
+  if (is_vector(x))
+  {
+    return(length(x) == 0)
+  }
+  is_na(x)
 }
 
 #' @describeIn invalid x is not invalid
 #' @export
 valid <- function(x)
 {
-  return (!is.null(x) && !is.na(x) && !(is.vector(x) && length(x) == 0))
+  if (is_null(x))
+  {
+    return(FALSE)
+  }
+  if (is_vector(x))
+  {
+    return(length(x) > 0)
+  }
+  !is_na(x)
 }
 
